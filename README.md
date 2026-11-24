@@ -21,35 +21,37 @@ These are on the held-out test split. Outcomes, comparisons and pass/fail margin
 concerning conversations only (A), and still rarely endorsed delusions. But B was also worse than A at
 pointing users to the right help when they were in real danger.
 
-| Condition | Endorses delusion ↓ | Over-reacts to true claims ↓ | Helpfulness on true claims ↑ (0–2) | Right help at real risk ↑ |
+| Condition | Endorses the delusion (% of replies) ↓ | Over-reacts to a true claim (% of replies) ↓ | Gives the right help at real risk (% of replies) ↑ | Helpfulness on true claims (score 0–2) ↑ |
 | --- | --- | --- | --- | --- |
-| Base (Qwen3.5-4B) | 0.19 | 0.04 | 1.06 | 0.75 |
-| P1: grounding prompt | 0.00 | 0.42 | 0.52 | 0.81 |
-| P2: anti-sycophancy prompt | 0.01 | 0.17 | 0.88 | 0.56 |
-| A: concerning-only LoRA | 0.00 | 0.38 | 0.65 | 0.81 |
-| **B: concerning + grounded twins** | **0.02** | **0.08** | **1.08** | **0.50** |
-| A′: B's concerning half only | 0.00 | 0.25 | 0.67 | 0.75 |
+| Base (Qwen3.5-4B) | 19% | 4% | 75% | 1.06 |
+| P1: grounding prompt | 0% | 42% | 81% | 0.52 |
+| P2: anti-sycophancy prompt | 1% | 17% | 56% | 0.88 |
+| A: concerning-only LoRA | 0% | 38% | 81% | 0.65 |
+| **B: concerning + grounded twins** | **2%** | **8%** | **50%** | **1.08** |
+| A′: B's concerning half only | 0% | 25% | 75% | 0.67 |
 
-<sub>Means over conversations. Endorsement is on the 7 held-out Psychosis-bench families, turns 4–12.
-Over-reaction and helpfulness are on 8 grounded low-risk families; appropriate help is on 4 grounded
-at-risk families. Intervals for every number are in [docs/m6-results.md](docs/m6-results.md).</sub>
+<sub>Each reply is judged yes/no for the first three columns, so those are the share of judged replies
+(averaged per conversation). Helpfulness is an average score from 0 (no help) to 2 (substantive, accurate
+help). Endorsement is on the 7 held-out Psychosis-bench families, turns 4–12. Over-reaction and helpfulness
+are on 8 grounded low-risk families; right help is on 4 grounded at-risk families. Intervals for every
+number are in [docs/m6-results.md](docs/m6-results.md).</sub>
 
 **What the evidence supports:**
 
 1. **Concerning-only training and prompting both stop endorsement, but at a cost.**
-   - A vs Base: endorsement −0.19 [−0.33, −0.06].
-   - Over-reaction: +0.33 [+0.19, +0.48], so the model clearly over-reacts more.
-   - Low-risk helpfulness drops by 0.42.
+   - A vs Base: endorsement falls by 19 percentage points (95% interval 6 to 33).
+   - Over-reaction rises by 33 points (19 to 48), so the model clearly over-reacts more.
+   - Helpfulness on true claims drops by 0.42 on the 0–2 scale.
    - P1 shows the same pattern.
 2. **The grounded twins reduce that over-reaction.**
-   - B vs A over-reaction: −0.29 [−0.46, −0.10].
-   - Endorsement does not come back (+0.02 [0.00, 0.04]).
+   - B vs A: over-reaction is 29 percentage points lower (10 to 46).
+   - Endorsement does not come back: it is 2 points higher at most (0 to 4).
    - The pre-registered claim *"B improves the balance over A"* is **supported**.
    - B's low-risk helpfulness is no worse than Base's.
    - Whether B's over-reaction is as low as Base's is **inconclusive**: similar means are not equivalence.
 3. **B is worse at giving the right help when the danger is real.**
-   - B vs A on appropriate help: −0.31 [−0.50, −0.13], an interval entirely below zero.
-   - It counts as "inconclusive" only against the pre-registered acceptable-loss margin of −0.15.
+   - B vs A: right help is 31 percentage points lower (13 to 50 lower), so the whole interval is a loss.
+   - It counts as "inconclusive" only against the pre-registered acceptable-loss margin of 15 points.
    - With 4 scenario families, this evidence is fragile.
    - The transcripts agree. In a carbon-monoxide case B said *not* to switch off the boiler. In a harassment
      case it hedged on contacting the police. It invented a "St Mawes" harassment helpline in 4 of its 24
@@ -157,7 +159,7 @@ checks the token budgets.
 - **Manifests:** each run writes token counts, update counts and the loss curve to a manifest.
 - **Dose check, decided in advance:**
   - If A did not reduce endorsement on dev cases at 3 epochs, all adapters would be retrained once at 5 epochs.
-  - It did (dev endorsement 0.00 vs 0.48), so 3 epochs was used.
+  - It did (A endorsed in 0% of dev replies vs 48% for Base), so 3 epochs was used.
 
 ### 4. Evaluation suites
 
