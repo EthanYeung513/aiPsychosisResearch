@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blind Labeller</title>
+<style>
+  :root { --bg:#fafaf9; --fg:#1c1917; --muted:#78716c; --card:#ffffff; --line:#e7e5e4; --accent:#2563eb; --hl:#eff6ff; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#1c1917; --fg:#f5f5f4; --muted:#a8a29e; --card:#292524; --line:#44403c; --accent:#60a5fa; --hl:#1e293b; } }
+  :root[data-theme="dark"] { --bg:#1c1917; --fg:#f5f5f4; --muted:#a8a29e; --card:#292524; --line:#44403c; --accent:#60a5fa; --hl:#1e293b; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.5 system-ui, sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 16px; }
+  header { display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px; margin-bottom:12px; }
+  .ctx { color:var(--muted); font-size:14px; }
+  .msg { padding:8px 10px; border-radius:8px; margin:6px 0; white-space:pre-wrap; overflow-wrap:anywhere; }
+  .user { background:transparent; border-left:3px solid var(--line); }
+  .assistant { border-left:3px solid var(--line); color:var(--muted); }
+  .final { background:var(--hl); border-left:3px solid var(--accent); color:var(--fg); }
+  details summary { cursor:pointer; color:var(--muted); }
+  .q { margin:10px 0; }
+  .q p { margin:0 0 4px; }
+  .opts label { margin-right:14px; white-space:nowrap; }
+  button, input[type=file] { font:inherit; }
+  button { padding:6px 12px; border-radius:8px; border:1px solid var(--line); background:var(--card); color:var(--fg); cursor:pointer; }
+  button.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .nav { display:flex; gap:8px; justify-content:space-between; flex-wrap:wrap; }
+  .muted { color:var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <strong>Blind labeller</strong>
+    <span class="muted" id="progress">Load items.json to begin</span>
+  </header>
+  <div class="card">
+    <input type="file" id="file" accept=".json">
+    <button id="export" class="primary" disabled>Export labels.json</button>
+    <p class="muted">Label the <b>highlighted final reply</b> only. You can't see which condition produced it. That's intentional. Don't open key.json until you've finished.</p>
+  </div>
+  <div id="item"></div>
+  <div class="nav">
+    <button id="prev" disabled>← Previous</button>
+    <button id="next" disabled>Next →</button>
+  </div>
+</main>
+<script>
+let items = [], labels = {}, i = 0, storeKey = null;
+const $ = id => document.getElementById(id);
+function save() { try { localStorage.setItem(storeKey, JSON.stringify({labels, i})); } catch (e) {} }
+function load() { try { const s = JSON.parse(localStorage.getItem(storeKey) || "null"); if (s) { labels = s.labels || {}; i = s.i || 0; } } catch (e) {} }
+function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+function done(it) { const l = labels[it.id] || {}; return Object.keys(it.questions).every(m => l[m] !== undefined); }
+function render() {
+  const it = items[i];
+  const n = items.filter(done).length;
+  $("progress").textContent = `Item ${i + 1} of ${items.length} · ${n} complete`;
+  const conv = it.conversation, last = conv.length - 1;
+  const earlier = conv.slice(0, last - 1).map(m => `<div class="msg ${m.role}"><b>${m.role}:</b> ${esc(m.content)}</div>`).join("");
+  const qs = Object.entries(it.questions).map(([m, q]) => {
+    const max = /0 = .*1 = .*2 = /.test(q) ? 2 : 1;
+    const cur = (labels[it.id] || {})[m];
+    const opts = [...Array(max + 1).keys()].map(v =>
+      `<label><input type="radio" name="${m}" value="${v}" ${cur === v ? "checked" : ""}> ${v}</label>`).join("");
+    return `<div class="q"><p><b>${m}</b>: ${esc(q)}</p><div class="opts">${opts}<label><input type="radio" name="${m}" value="na" ${cur === null ? "checked" : ""}> can't judge</label></div></div>`;
+  }).join("");
+  $("item").innerHTML = `<div class="card">
+    <p class="ctx"><b>Context:</b> ${esc(it.context || "")}${it.harm_type ? ` <b>Harm context:</b> ${esc(it.harm_type)}` : ""}</p>
+    ${earlier ? `<details><summary>Earlier turns (${(last - 1) / 2})</summary>${earlier}</details>` : ""}
+    <div class="msg user"><b>user:</b> ${esc(conv[last - 1].content)}</div>
+    <div class="msg final"><b>assistant (label this):</b> ${esc(conv[last].content)}</div>
+  </div><div class="card">${qs}</div>`;
+  $("item").querySelectorAll("input[type=radio]").forEach(r => r.addEventListener("change", e => {
+    labels[it.id] = labels[it.id] || {};
+    labels[it.id][e.target.name] = e.target.value === "na" ? null : Number(e.target.value);
+    save(); $("progress").textContent = `Item ${i + 1} of ${items.length} · ${items.filter(done).length} complete`;
+  }));
+  $("prev").disabled = i === 0; $("next").disabled = i === items.length - 1;
+}
+$("file").addEventListener("change", async e => {
+  const f = e.target.files[0]; if (!f) return;
+  items = JSON.parse(await f.text());
+  storeKey = "labeller:" + items.map(x => x.id).join("").slice(0, 64);
+  labels = {}; i = 0; load(); $("export").disabled = false; render();
+});
+$("prev").onclick = () => { i--; save(); render(); window.scrollTo(0, 0); };
+$("next").onclick = () => { i++; save(); render(); window.scrollTo(0, 0); };
+$("export").onclick = () => {
+  const blob = new Blob([JSON.stringify(labels, null, 1)], {type: "application/json"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "labels.json"; a.click();
+};
+</script>
+</body>
+</html>

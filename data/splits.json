@@ -1,0 +1,112 @@
+{
+  "version": "2-ai-reviewed",
+  "assigned_on": "2026-11-22",
+  "rule": "Original assignments retained; training-only exclusions recorded after AI review. Disjoint family identifiers do not imply disjoint broad themes. Evaluation text must not be used as drafting input. No exposed case is promoted to test.",
+  "evaluation": {
+    "psychosis_bench": {
+      "families": [
+        "conduit",
+        "digital_romance",
+        "medical_awakening",
+        "secret_project",
+        "messianic_union",
+        "turing_test",
+        "unseen_connections",
+        "ai_sweetheart"
+      ],
+      "dev_exposed": [
+        "conduit"
+      ],
+      "note": "Primary held-out result = the 7 families not dev-exposed; conduit reported separately."
+    },
+    "grounded_low_risk": {
+      "dev": [
+        "heat_pump_hum",
+        "novel_signals",
+        "accelerator_mission",
+        "ai_companion_aware",
+        "banana_radiation",
+        "retreat_oneness",
+        "exam_stress",
+        "number_coincidence"
+      ],
+      "test": [
+        "sleep_paralysis_known",
+        "chosen_scholarship",
+        "smart_meter_readings",
+        "astronomy_alignment",
+        "ancestry_surprise",
+        "tabletop_campaign",
+        "lottery_syndicate_win",
+        "language_dreams"
+      ]
+    },
+    "grounded_at_risk": {
+      "note": "Beliefs are true or ordinary but there is real risk or distress; a referral or concrete help IS appropriate.",
+      "dev": [
+        "real_ex_stalking",
+        "grief_passive_si",
+        "stroke_symptoms_parent",
+        "romance_scam_victim"
+      ],
+      "test": [
+        "workplace_harassment_threats",
+        "postnatal_low_mood",
+        "carbon_monoxide_symptoms",
+        "debt_collector_threats"
+      ]
+    }
+  },
+  "training": {
+    "concerning": {
+      "families": [
+        "persecutory_neighbours",
+        "somatic_parasites",
+        "thought_broadcasting",
+        "inventor_grandiosity",
+        "celebrity_erotomania",
+        "impostor_family",
+        "poisoned_food",
+        "simulation_glitch",
+        "tv_messages",
+        "cosmic_guilt"
+      ],
+      "note": "Nine active families after exclusion. Broad overlaps (romance, grandiosity, health concerns) remain and must be reported."
+    },
+    "grounded_counterparts": {
+      "families": [
+        "neighbour_cctv_dispute",
+        "diagnosed_scabies",
+        "shared_doc_privacy",
+        "patent_granted",
+        "met_band_at_signing",
+        "twin_sibling_reunion",
+        "food_recall_notice",
+        "game_engine_bug",
+        "radio_dedication",
+        "volunteer_after_accident"
+      ],
+      "pairs_with": {
+        "neighbour_cctv_dispute": "persecutory_neighbours",
+        "diagnosed_scabies": "somatic_parasites",
+        "shared_doc_privacy": "thought_broadcasting",
+        "patent_granted": "inventor_grandiosity",
+        "met_band_at_signing": "celebrity_erotomania",
+        "twin_sibling_reunion": "impostor_family",
+        "food_recall_notice": "poisoned_food",
+        "game_engine_bug": "simulation_glitch",
+        "radio_dedication": "tv_messages",
+        "volunteer_after_accident": "cosmic_guilt"
+      }
+    },
+    "ordinary_instruction": {
+      "note": "For optional condition A''. Source to be chosen (permissive licence); not yet selected."
+    },
+    "excluded_families": [
+      "tv_messages",
+      "radio_dedication"
+    ],
+    "exclusion_reason": "Conservative exclusion of the TV/radio pair because of close signals-theme overlap; not proof of verbatim leakage. These reviewed examples are quarantined, not reassigned to test."
+  },
+  "reviewed_on": "2026-11-23"
+}

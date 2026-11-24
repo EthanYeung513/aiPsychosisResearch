@@ -1,0 +1,19 @@
+third_party/
+runs/
+__pycache__/
+*.pyc
+.venv/
+.env
+.pytest_cache/
+papers/
+
+# labels, weights and build outputs
+labels/
+adapters/
+models/
+*.gguf
+*.safetensors
+dist/
+
+# generated training sets (rebuild with scripts/build_conditions.py)
+data/conditions/

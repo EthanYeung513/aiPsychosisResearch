@@ -1,0 +1,13 @@
+[project]
+name = "psyeval"
+version = "0.1.0"
+description = "Strict evaluation harness for psychosis-related chatbot behaviour (wraps pinned Psychosis-bench cases)"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
