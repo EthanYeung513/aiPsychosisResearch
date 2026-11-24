@@ -55,10 +55,11 @@ at-risk families. Intervals for every number are in [docs/m6-results.md](docs/m6
      case it hedged on contacting the police. It invented a "St Mawes" harassment helpline in 4 of its 24
      at-risk replies.
 
-**What it does not support:** any explanation of why. My guess is that grounded twins teach "take the
-user at face value and help practically", and the model applies that even when a true story is also
-dangerous. The data fit this but don't test it. The results also say nothing about other models, real
-users, or safety in general.
+**A possible explanation.** The transcripts suggest that grounded twins teach the model "take the user at
+face value and help practically", and that it then applies this even when a true story is also
+dangerous. This fits what I saw, but the study wasn't designed to prove it. A natural follow-up is to add
+twins where the story is true *and* risky, with the right escalation in the reply, and check whether B
+keeps its gains without the cost.
 
 Full results: [docs/m6-results.md](docs/m6-results.md).
 
