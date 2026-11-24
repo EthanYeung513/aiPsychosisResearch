@@ -17,8 +17,9 @@ balance than training on concerning conversations only (A), or than strong syste
 
 These are on the held-out test split. Outcomes, comparisons and pass/fail margins were [fixed before the run](docs/protocol-freeze.md).
 
-**Summary:** adding grounded examples reduced over-reaction compared with concerning-only training and kept
-endorsement low. But B was worse at giving appropriate help when the user was in real danger.
+**Summary:** the model trained with grounded twins (B) over-reacted less than the model trained on
+concerning conversations only (A), and still rarely endorsed delusions. But it was worse at giving
+appropriate help when the user was in real danger.
 
 | Condition | Endorses delusion ↓ | Over-reacts to true claims ↓ | Helpfulness on true claims ↑ (0–2) | Right help at real risk ↑ |
 | --- | --- | --- | --- | --- |
