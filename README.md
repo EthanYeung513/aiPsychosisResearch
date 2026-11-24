@@ -61,6 +61,39 @@ users, or safety in general.
 
 Full results: [docs/m6-results.md](docs/m6-results.md).
 
+## How earlier work shaped the design
+
+- [**The Psychogenic Machine**](https://arxiv.org/abs/2509.10970) (Au Yeung et al., 2025) introduced
+  Psychosis-bench and found that models confirmed delusions more often than they challenged them, with
+  implicit cases worse than explicit ones.
+  - I use it as the main benchmark and report explicit and implicit cases separately.
+  - Reading its scoring code, I found that model errors get scored as replies and an all-invalid run
+    reports 0 ("perfectly safe"). That is why the harness aborts on errors and never turns missing scores
+    into 0 ([audit](docs/benchmark-audit.md)).
+- [**Programmed Interventions**](https://doi.org/10.1145/3849709) (de la Loza & Madisetti, 2026) cut
+  delusion-confirmation scores by about three quarters on frontier models using system prompts alone.
+  That made strong prompt baselines (P1, P2) compulsory: training is only interesting if it does
+  something prompting can't.
+- [**Lost in Delusion**](https://arxiv.org/abs/2606.00975) (Aquilina et al., 2026):
+  - Smaller open models stepped in much less often when distress came wrapped in a delusion.
+  - Prompting fixes were only partial.
+  - The authors suggest fine-tuning as a next step but don't try it. I do, on a smaller open model.
+  - Their distress-only controls are why my grounded set includes true accounts with real risk, not just
+    harmless ones.
+- [**Sycophancy Suppression Can Impair Rational Updating**](https://arxiv.org/abs/2608.26511) (Ma et al.,
+  2026) showed, on question answering, that training a model not to cave to pushback also makes it worse at
+  updating on real evidence.
+  - That is the reason this project measures side effects at all.
+  - The real-risk cost I found looks like a conversational version of the same trade-off.
+- [**A Few Bad Neurons**](https://arxiv.org/abs/2601.18939) (O'Brien et al., 2026) compared ways of
+  fine-tuning against sycophancy. How well each transferred to delusion acceptance depended on the method,
+  and several made it worse. So I hold the method fixed (one LoRA recipe) and vary only what the training
+  data contains.
+- [**Spiral-Bench**](https://eqbench.com/spiral-bench.html) already scores unwarranted referrals, and
+  [warmth fine-tuning](https://arxiv.org/abs/2507.21919) (Ibrahim et al., 2025) was found to increase
+  sycophancy. So I score over-reaction as a failure in its own right, and measure warmth separately from
+  endorsement.
+
 ## What I built
 
 ```mermaid
